@@ -3,15 +3,18 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jimObjModelImporterJFX.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jmf.jar!/" />
-      <root url="file://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib" />
       <root url="jar://$BAILEY$!/" />
-      <root url="jar://$USER_HOME$/intellij-workspace/wormMath.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../wormMath.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx-swt.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.base.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.controls.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.fxml.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.graphics.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.media.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.swing.jar!/" />
+      <root url="jar://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib/javafx.web.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib" />
-    </SOURCES>
-    <jarDirectory url="file://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib" recursive="false" />
-    <jarDirectory url="file://$USER_HOME$/java tools/javafx-sdk-11.0.2/lib" recursive="false" type="SOURCES" />
+    <SOURCES />
   </library>
 </component>

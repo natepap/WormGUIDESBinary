@@ -7,8 +7,11 @@ import application_src.application_model.search.SearchConfiguration.SearchOption
 import application_src.application_model.search.SearchConfiguration.SearchType;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
 import javafx.scene.paint.Color;
 import java.util.*;
+
+import static application_src.application_model.data.CElegansData.SulstonLineage.LineageTree.getBinMap;
 import static application_src.application_model.data.CElegansData.SulstonLineage.LineageTree.getCaseSensitiveName;
 import static application_src.application_model.search.SearchConfiguration.SearchOption.CELL_BODY;
 import static application_src.application_model.search.SearchConfiguration.SearchOption.CELL_NUCLEUS;
@@ -33,12 +36,18 @@ public class AnnotationManager {
 
     private CElegansSearch cElegansSearch;
 
+    private Map<String, TreeItem<String>> binLineageMap;
+
 
     public AnnotationManager(ObservableList<Rule> rulesList, BooleanProperty rebuildSubsceneFlag, CElegansSearch cElegansSearch) {
         this.rulesList = rulesList;
         this.rebuildSubsceneFlag = rebuildSubsceneFlag;
         this.cElegansSearch = cElegansSearch;
 
+    }
+
+    public void addBinaryMap(Map<String, TreeItem<String>> binLineageMap){
+        this.binLineageMap = binLineageMap;
     }
 
     ///////////////////////////////////////////// ANNOTATION METHODS ///////////////////////////////////
@@ -93,6 +102,36 @@ public class AnnotationManager {
 
         rulesList.add(rule);
         return rule;
+    }
+
+    public Rule addBinaryColorRule(
+            final String searched,
+            final Color color,
+            final List<String> searchResults,
+            List<SearchOption> options){
+
+        List<String> lineageResults = new ArrayList<>();
+
+        for(String binName: searchResults){
+            for(String lineageName: binLineageMap.keySet()){
+                if(binName.equals(binLineageMap.get(lineageName).getValue())){
+                    lineageResults.add(lineageName);
+                }
+            }
+        }
+
+        String lineageSearched = searched;
+        for(String lineageName: binLineageMap.keySet()){
+            if(lineageSearched.equals(binLineageMap.get(lineageName).getValue())){
+                lineageSearched = lineageName;
+            }
+        }
+
+        return  addColorRule(LINEAGE,
+                lineageSearched,
+                color,
+                lineageResults,
+                options);
     }
 
     public Rule addConnectomeColorRule(

@@ -2641,8 +2641,22 @@ public class Window3DController {
         }
 
         // cells
-        for (int i = 0; i < cellNames.size(); i++) {
-            isCellSearchedFlags[i] = localSearchResults.contains(cellNames.get(i));
+        if(binNameMap.containsKey(localSearchResults.get(0).toLowerCase())){
+            for (int i = 0; i < cellNames.size(); i++) {
+                isCellSearchedFlags[i] = localSearchResults.contains(cellNames.get(i));
+            }
+        }else{
+            List<String> binNameList = new ArrayList<>(localSearchResults.size());
+            for(String binName: localSearchResults){
+                for(String lineageName: binNameMap.keySet()){
+                    if(binNameMap.get(lineageName).getValue().equals(binName)){
+                        binNameList.add(lineageName);
+                    }
+                }
+            }
+            for (int i = 0; i < cellNames.size(); i++) {
+                isCellSearchedFlags[i] = binNameList.contains(cellNames.get(i).toLowerCase());
+            }
         }
 
         // meshes

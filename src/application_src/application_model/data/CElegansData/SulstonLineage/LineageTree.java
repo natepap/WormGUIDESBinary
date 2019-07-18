@@ -38,7 +38,7 @@ public class LineageTree {
     private TreeItem<String> c;
     private TreeItem<String> d;
 
-    private Map<String, TreeItem<String>> binNameHash;
+    private static Map<String, TreeItem<String>> binNameHash;
     private TreeItem<String> binRoot;
     private binaryLineageTree binLineageTree;
 
@@ -76,6 +76,7 @@ public class LineageTree {
 
             // zero-th root layer
             nameNodeHash.put("p0", root);
+
 
             // first layer
             ab = makeTreeItem("AB");
@@ -340,5 +341,5 @@ public class LineageTree {
         return nameNodeHash.containsKey(name.toLowerCase());
     }
 
-    public Map<String, TreeItem<String>> getBinMap(){return binNameHash;}
+    public static Map<String, TreeItem<String>> getBinMap(){return binNameHash;}
 }

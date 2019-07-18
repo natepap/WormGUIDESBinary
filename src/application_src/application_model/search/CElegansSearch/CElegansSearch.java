@@ -10,9 +10,12 @@ import application_src.application_model.data.CElegansData.Connectome.NeuronalSy
 import application_src.application_model.data.CElegansData.Gene.GeneSearchManager;
 import application_src.application_model.data.CElegansData.Gene.WormBaseQuery;
 import application_src.application_model.data.CElegansData.SulstonLineage.SulstonLineage;
+import application_src.application_model.data.CElegansData.SulstonLineage.LineageTree;
 import application_src.application_model.data.CElegansData.PartsList.PartsList;
+import application_src.application_model.data.LineageData;
 import application_src.application_model.data.OrganismDataType;
 import application_src.application_model.search.OrganismSearch;
+import com.sun.source.tree.Tree;
 import javafx.scene.control.TreeItem;
 
 import java.util.*;
@@ -323,6 +326,52 @@ public class CElegansSearch implements OrganismSearch {
 
     ////////// FUNCTIONAL SEARCH ////////////////////////////////////////////////////////////////////////////////////
 
+
+
+    ////////// BINARY SEARCH ////////////////////////////////////////////////////////////////////////////////////
+    /**
+     *
+     * @param searchString
+     * @param includeAncestors
+     * @param includeDescendants
+     * @return
+     */
+
+    @Override
+    public AbstractMap.SimpleEntry<OrganismDataType, List<String>> executeBinarySearch(String searchString, boolean includeAncestors, boolean includeDescendants, Map<String, TreeItem<String>> binLineageMap){
+        ArrayList<String> searchResults = new ArrayList<>();
+
+        for (TreeItem<String> binSearchEntry: binLineageMap.values()){
+
+            if(binSearchEntry.getValue().equals(searchString)){
+                searchResults.add(searchString);
+
+                if(includeAncestors){
+                    for(TreeItem<String> binEntry: binLineageMap.values()){
+                        if(binEntry.getValue().length() < searchString.length()){
+                            if(searchString.substring(0, binEntry.getValue().length()).equals(binEntry.getValue())){
+                                searchResults.add(binEntry.getValue());
+                            }
+                        }
+                    }
+                }
+
+                if(includeDescendants){
+                    for(TreeItem<String> binEntry: binLineageMap.values()){
+                        if(binEntry.getValue().length() > searchString.length()){
+                            if(binEntry.getValue().substring(0, searchString.length()).equals(searchString)){
+                                searchResults.add(binEntry.getValue());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return new AbstractMap.SimpleEntry(OrganismDataType.BINARY, searchResults);
+    }
+
+    ////////// BINARY SEARCH ////////////////////////////////////////////////////////////////////////////////////
 
 
 

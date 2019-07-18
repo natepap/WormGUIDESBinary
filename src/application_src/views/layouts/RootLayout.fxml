@@ -219,6 +219,18 @@
                                                                                                 <RadioButton fx:id="funRadioBtn" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="22.0" />
                                                                                             </children>
                                                                                         </HBox>
+                                                                                        <HBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0">
+                                                                                            <children>
+                                                                                                <Region maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                                <Label maxHeight="-Infinity" minHeight="-Infinity" prefHeight="22.0" text="Binary Name">
+                                                                                                    <font>
+                                                                                                        <Font size="14.0" />
+                                                                                                    </font>
+                                                                                                </Label>
+                                                                                                <Region prefHeight="22.0" HBox.hgrow="ALWAYS" />
+                                                                                                <RadioButton fx:id="binRadioBtn" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="22.0" />
+                                                                                            </children>
+                                                                                        </HBox>
                                                                                         <HBox maxWidth="-Infinity" minHeight="-Infinity" prefWidth="230.0">
                                                                                             <children>
                                                                                                 <Region maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />

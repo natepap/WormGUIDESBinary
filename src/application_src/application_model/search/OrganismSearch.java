@@ -2,6 +2,7 @@ package application_src.application_model.search;
 
 
 import application_src.application_model.data.OrganismDataType;
+import javafx.scene.control.TreeItem;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -42,6 +43,18 @@ public interface OrganismSearch {
                                                                                     boolean includeAncestors,
                                                                                     boolean includeDescendants,
                                                                                     OrganismDataType intendedResultsType);
+
+    /**
+     *
+     * @param searchString
+     * @param includeAncestors
+     * @param includeDescendants
+     * @return
+     */
+    AbstractMap.SimpleEntry<OrganismDataType, List<String>> executeBinarySearch(String searchString,
+                                                                                boolean includeAncestors,
+                                                                                boolean includeDescendants,
+                                                                                Map<String, TreeItem<String>> binLineageMap);
 
     /**
      *

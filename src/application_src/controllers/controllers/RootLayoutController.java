@@ -89,6 +89,7 @@ import application_src.views.url_window.URLLoadWindow;
 import application_src.views.url_window.URLShareWindow;
 
 import static java.lang.System.lineSeparator;
+import static java.lang.System.setOut;
 import static java.time.Duration.between;
 
 import static javafx.application.Platform.runLater;
@@ -173,6 +174,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @FXML
     private RadioButton sysRadioBtn,
             funRadioBtn,
+            binRadioBtn,
             desRadioBtn,
             genRadioBtn,
             conRadioBtn;
@@ -546,6 +548,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
                 searchType = "SulstonLineage Name";
             } else if (funRadioBtn.isSelected()) {
                 searchType = "Function Name";
+            } else if(binRadioBtn.isSelected()){
+               searchType = "Binary Name";
             } else if (desRadioBtn.isSelected()) {
                 searchType = "PartsList Desciption";
             } else if (genRadioBtn.isSelected()) {
@@ -950,7 +954,24 @@ public class RootLayoutController extends BorderPane implements Initializable {
         name = name.trim();
 
         boolean hasBinName = binLineageMap.containsKey(name.toLowerCase());
-        if(hasBinName){
+        String tradName = null;
+
+        for(String binEntry: binLineageMap.keySet()){
+            if(binLineageMap.get(binEntry).getValue().equals(name)){
+                for(String cellName: lineageData.getAllCellNames()){
+                    if(binEntry.equals(cellName.toLowerCase())){
+                        tradName = cellName;
+                        hasBinName = true;
+                        continue;
+                    }
+                }
+            }
+            continue;
+        }
+
+        if(tradName != null) {
+            displayedName.setText("Active Cell: " + tradName + "  " + name);
+        }else if(hasBinName){
             displayedName.setText("Active Cell: " + name + "  " + binLineageMap.get(name.toLowerCase()).getValue());
         }else{
             displayedName.setText("Active Cell: " + name);
@@ -1102,6 +1123,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
                 searchField,
                 sysRadioBtn,
                 funRadioBtn,
+                binRadioBtn,
                 desRadioBtn,
                 genRadioBtn,
                 conRadioBtn,
@@ -1116,7 +1138,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
                 ancestorCheckBox,
                 descendantCheckBox,
                 colorPicker,
-                addSearchBtn);
+                addSearchBtn,
+                binLineageMap);
         searchResultsListView.setItems(searchResultsList);
     }
 
@@ -1357,6 +1380,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     private void initializeWithLineageData() {
         initLineageTree(lineageData.getAllCellNames());
+        annotationManager.addBinaryMap(binLineageMap);
 
         neighborsSearch = new NeighborsSearch(this.lineageData);
 
@@ -1365,7 +1389,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
         structuresSearch = new StructuresSearch(sceneElementsList, sceneElementsList.getTreeRoot(), annotationManager);
         initStructuresLayer();
 
-        establishCorrespondence = new EstablishCorrespondence(this.lineageData, this.structuresSearch);
+        establishCorrespondence = new EstablishCorrespondence(this.lineageData, this.structuresSearch, this.binLineageMap);
 
         ModelSpecificSearchUtil.init(lineageData, sceneElementsList);
 

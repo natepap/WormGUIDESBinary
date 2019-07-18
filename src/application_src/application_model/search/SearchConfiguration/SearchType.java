@@ -19,6 +19,9 @@ public enum SearchType {
     /** Search for cells with the functional name with a specified prefix */
     FUNCTIONAL("Functional"),
 
+    /** Search for cells by their binary names*/
+    BINARY("Binary"),
+
     /** Search for cells with a specified {@link application_src.application_model.data.CElegansData.PartsList.PartsList} description */
     DESCRIPTION("\"PartsList\" Description"),
 

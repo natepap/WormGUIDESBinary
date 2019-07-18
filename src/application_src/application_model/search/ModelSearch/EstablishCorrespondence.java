@@ -5,6 +5,7 @@ import application_src.application_model.data.OrganismDataType;
 import application_src.application_model.search.ModelSearch.ModelSpecificSearchOps.StructuresSearch;
 import application_src.application_model.search.OrganismSearchResults;
 import application_src.application_model.threeD.subscenegeometry.SceneElementsList;
+import javafx.scene.control.TreeItem;
 
 import java.util.*;
 
@@ -23,9 +24,12 @@ public class EstablishCorrespondence {
     private static LineageData lineageData;
     private static StructuresSearch structuresSearch;
 
-    public EstablishCorrespondence(LineageData lineageData, StructuresSearch structuresSearch) {
+    private static Map<String, TreeItem<String>> binLineageMap;
+
+    public EstablishCorrespondence(LineageData lineageData, StructuresSearch structuresSearch, Map binLineageMap) {
         this.lineageData = lineageData;
         this.structuresSearch = structuresSearch;
+        this.binLineageMap = binLineageMap;
     }
 
     public List<String> establishCorrespondence(OrganismSearchResults searchResults,
@@ -34,6 +38,18 @@ public class EstablishCorrespondence {
 
         if (searchResults.getSearchResultsDataType().equals(OrganismDataType.GENE)) {
             return searchResults.getSearchResults();
+        }else if(searchResults.getSearchResultsDataType().equals(OrganismDataType.BINARY)){
+            List<String> tempList = new ArrayList<>(searchResults.getSearchResults().size());
+
+            for(String binResult: searchResults.getSearchResults()){
+                for(String binEntry: binLineageMap.keySet()){
+                    if(binLineageMap.get(binEntry).getValue().equals(binResult)){
+                        tempList.add(binEntry);
+                    }
+                }
+            }
+
+            searchResults = new OrganismSearchResults(new AbstractMap.SimpleEntry<>(OrganismDataType.LINEAGE, tempList));
         }
 
         if (includeCellNuc) {

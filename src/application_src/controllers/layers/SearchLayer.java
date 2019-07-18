@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import application_src.application_model.annotation.AnnotationManager;
 import application_src.application_model.data.CElegansData.Gene.GeneSearchManager;
+import application_src.application_model.data.LineageData;
 import application_src.application_model.data.OrganismDataType;
 import application_src.application_model.search.CElegansSearch.CElegansSearch;
 import application_src.application_model.search.CElegansSearch.CElegansSearchResults;
@@ -25,18 +26,16 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import application_src.application_model.search.SearchConfiguration.SearchType;
 import application_src.application_model.data.CElegansData.Anatomy.AnatomyTerm;
 import application_src.application_model.annotation.color.Rule;
 import application_src.application_model.search.SearchConfiguration.SearchOption;
+
+import javax.sound.sampled.Line;
+
+import static application_src.application_model.search.SearchConfiguration.SearchType.*;
 import static java.lang.Thread.sleep;
 import static java.util.Collections.sort;
 import static java.util.Objects.requireNonNull;
@@ -44,12 +43,6 @@ import static javafx.application.Platform.runLater;
 import static application_src.application_model.data.CElegansData.PartsList.PartsList.getFunctionalNameByLineageName;
 import static application_src.application_model.data.CElegansData.PartsList.PartsList.getLineageNamesByFunctionalName;
 import static application_src.application_model.data.CElegansData.PartsList.PartsList.isLineageName;
-import static application_src.application_model.search.SearchConfiguration.SearchType.CONNECTOME;
-import static application_src.application_model.search.SearchConfiguration.SearchType.DESCRIPTION;
-import static application_src.application_model.search.SearchConfiguration.SearchType.FUNCTIONAL;
-import static application_src.application_model.search.SearchConfiguration.SearchType.GENE;
-import static application_src.application_model.search.SearchConfiguration.SearchType.LINEAGE;
-import static application_src.application_model.search.SearchConfiguration.SearchType.MULTICELLULAR_STRUCTURE_CELLS;
 import static application_src.application_model.data.CElegansData.Anatomy.AnatomyTerm.AMPHID_SENSILLA;
 import static application_src.application_model.search.SearchConfiguration.SearchOption.ANCESTOR;
 import static application_src.application_model.search.SearchConfiguration.SearchOption.CELL_BODY;
@@ -93,6 +86,8 @@ public class SearchLayer {
     private final ColorPicker colorPicker;
     private final Button addRuleButton;
 
+    private final Map<String, TreeItem<String>> binLineageMap;
+
 
     public SearchLayer(
             final CElegansSearch CElegansSearchPipeline,
@@ -105,6 +100,7 @@ public class SearchLayer {
             final TextField searchTextField,
             final RadioButton lineageRadioButton,
             final RadioButton functionalRadioButton,
+            final RadioButton binaryRadioButton,
             final RadioButton descriptionRadioButton,
             final RadioButton geneRadioButton,
             final RadioButton connectomeRadioButton,
@@ -119,7 +115,8 @@ public class SearchLayer {
             final CheckBox ancestorCheckBox,
             final CheckBox descendantCheckBox,
             final ColorPicker colorPicker,
-            final Button addRuleButton) {
+            final Button addRuleButton,
+            final Map binLineageMap) {
 
 
         //////// SEARCH PIPELINES, MODULES AND MANUALS ///////////////////
@@ -175,6 +172,8 @@ public class SearchLayer {
         // add rule button
         this.addRuleButton = requireNonNull(addRuleButton);
         this.addRuleButton.setOnAction(getAddButtonClickHandler());
+
+        this.binLineageMap = binLineageMap;
 
         // the service that indicates that results are loading in the search results area
         // although this is activated on all searches, in reality, it will only appear
@@ -238,6 +237,7 @@ public class SearchLayer {
         initSearchTypeToggleGroup(
                 requireNonNull(lineageRadioButton),
                 requireNonNull(functionalRadioButton),
+                requireNonNull(binaryRadioButton),
                 requireNonNull(descriptionRadioButton),
                 requireNonNull(geneRadioButton),
                 requireNonNull(connectomeRadioButton),
@@ -258,6 +258,7 @@ public class SearchLayer {
     private void initSearchTypeToggleGroup(
             final RadioButton lineageRadioButton,
             final RadioButton functionalRadioButton,
+            final RadioButton binaryRadioButton,
             final RadioButton descriptionRadioButton,
             final RadioButton geneRadioButton,
             final RadioButton connectomeRadioButton,
@@ -269,6 +270,9 @@ public class SearchLayer {
 
         functionalRadioButton.setToggleGroup(searchTypeToggleGroup);
         functionalRadioButton.setUserData(FUNCTIONAL);
+
+        binaryRadioButton.setToggleGroup(searchTypeToggleGroup);
+        binaryRadioButton.setUserData(BINARY);
 
         descriptionRadioButton.setToggleGroup(searchTypeToggleGroup);
         descriptionRadioButton.setUserData(DESCRIPTION);
@@ -346,6 +350,7 @@ public class SearchLayer {
             //      and populate these results to the CElegansSearchResultsClass
             CElegansSearchResults cElegansDataSearchResults = new CElegansSearchResults(new AbstractMap.SimpleEntry<OrganismDataType, List<String>>(null, new ArrayList<>()));
             List<String> modelDataSearchResults = new ArrayList<>();
+
             switch (searchType) {
                 case LINEAGE: // C Elegans data
                     cElegansDataSearchResults = new CElegansSearchResults(
@@ -370,6 +375,13 @@ public class SearchLayer {
                                     areAncestorsFetched,
                                     areDescendantsFetched,
                                     OrganismDataType.LINEAGE));
+                    break;
+                case BINARY: // C Elegans Binary Data
+                    cElegansDataSearchResults = new CElegansSearchResults(
+                            cElegansSearchPipeline.executeBinarySearch(searchedTerm,
+                                    areAncestorsFetched,
+                                    areDescendantsFetched,
+                                    binLineageMap));
                     break;
                 case DESCRIPTION: // C Elegans data
                     cElegansDataSearchResults = new CElegansSearchResults(
@@ -518,6 +530,13 @@ public class SearchLayer {
                 case FUNCTIONAL: // C Elegans data
                     annotationManager.addColorRule(
                             FUNCTIONAL,
+                            getSearchedText(),
+                            colorPicker.getValue(),
+                            localUnformattedResults,
+                            options);
+                    break;
+                case BINARY:
+                    annotationManager.addBinaryColorRule(
                             getSearchedText(),
                             colorPicker.getValue(),
                             localUnformattedResults,

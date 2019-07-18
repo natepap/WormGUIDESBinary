@@ -5,6 +5,8 @@ public enum OrganismDataType {
 
     FUNCTIONAL("Functional"),
 
+    BINARY("Binary"),
+
     GENE("Gene");
 
     private final String description;
