@@ -15,7 +15,7 @@ import application_src.application_model.data.CElegansData.PartsList.PartsList;
 import application_src.application_model.data.LineageData;
 import application_src.application_model.data.OrganismDataType;
 import application_src.application_model.search.OrganismSearch;
-import com.sun.source.tree.Tree;
+//import com.sun.source.tree.Tree;
 import javafx.scene.control.TreeItem;
 
 import java.util.*;
