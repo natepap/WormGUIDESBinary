@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WormGUIDESBinary" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="Java 12" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="application_src.Launcher" />
+    <module name="WormGUIDESBinary" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
