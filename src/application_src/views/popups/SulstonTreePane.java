@@ -57,7 +57,6 @@ import application_src.controllers.controllers.ContextMenuController;
 import application_src.controllers.layers.SearchLayer;
 import application_src.application_model.annotation.color.Rule;
 import application_src.application_model.annotation.color.ColorHash;
-import wormGUIDESBinary.BinaryName;
 
 import static java.lang.Math.max;
 import static java.lang.Math.round;
